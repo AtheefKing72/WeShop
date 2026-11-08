@@ -1,0 +1,16 @@
+{
+"name": "weshop-pod-store",
+"version": "1.0.0",
+"description": "WeShop Print-on-Demand T-Shirt Store with Node.js & PayPal Backend",
+"main": "server.js",
+"scripts": {
+"start": "node server.js",
+"dev": "nodemon server.js"
+},
+"dependencies": {
+"@paypal/checkout-server-sdk": "^1.0.3",
+"cors": "^2.8.5",
+"dotenv": "^16.4.5",
+"express": "^4.19.2"
+}
+}
