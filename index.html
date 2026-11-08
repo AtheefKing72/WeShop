@@ -104,12 +104,12 @@
 
         .image-container {
             width: 100%;
-            height: 340px;
+            height: 320px;
             border-radius: 12px;
             overflow: hidden;
             background: #161b22;
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -120,6 +120,29 @@
             height: 100%;
             object-fit: cover;
             transition: opacity 0.3s ease;
+        }
+
+        .thumbnails {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .thumb {
+            width: 56px;
+            height: 56px;
+            border-radius: 8px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid var(--border-glass);
+            opacity: 0.6;
+            transition: all 0.2s ease;
+            background: #161b22;
+        }
+
+        .thumb.active, .thumb:hover {
+            border-color: var(--accent-gold);
+            opacity: 1;
         }
 
         .product-info {
@@ -273,13 +296,6 @@
             border-color: var(--accent-gold);
         }
 
-        .error-msg {
-            color: var(--error-red);
-            font-size: 0.8rem;
-            margin-top: 4px;
-            display: none;
-        }
-
         #paypal-button-container {
             margin-top: 24px;
             min-height: 150px;
@@ -307,12 +323,19 @@
         <div class="product-grid">
             <div class="product-card">
                 <div class="image-container">
-                    <img id="product-img" class="main-image" src="Front.png" alt="Black Friday Classic Tee" onerror="handleImageError(this)">
+                    <img id="main-product-img" class="main-image" src="Front.png" alt="Black Friday Classic Tee">
                 </div>
                 
+                <div class="thumbnails">
+                    <img class="thumb active" src="Front.png" onclick="switchImage(this, 'Front.png')" alt="Front View">
+                    <img class="thumb" src="Back.png" onclick="switchImage(this, 'Back.png')" alt="Back View">
+                    <img class="thumb" src="Person 1 Front.png" onclick="switchImage(this, 'Person 1 Front.png')" alt="Model View">
+                    <img class="thumb" src="Folded.png" onclick="switchImage(this, 'Folded.png')" alt="Folded View">
+                </div>
+
                 <div class="product-info">
-                    <h3 class="product-title" id="item-title">Black Friday Classic Tee</h3>
-                    <div class="product-price" id="item-price">$45.00</div>
+                    <h3 class="product-title">Black Friday Classic Tee</h3>
+                    <div class="product-price">$45.00</div>
                     
                     <div class="selector-group">
                         <div>
@@ -349,23 +372,19 @@
             <form id="shipping-form" onsubmit="return false;">
                 <div class="form-group">
                     <label for="cust-name">Full Name *</label>
-                    <input type="text" id="cust-name" placeholder="John Doe" required oninput="validateForm()">
-                    <span class="error-msg" id="err-name">Please enter your full name</span>
+                    <input type="text" id="cust-name" placeholder="John Doe" required>
                 </div>
                 <div class="form-group">
                     <label for="cust-email">Email Address *</label>
-                    <input type="email" id="cust-email" placeholder="john@example.com" required oninput="validateForm()">
-                    <span class="error-msg" id="err-email">Please enter a valid email</span>
+                    <input type="email" id="cust-email" placeholder="john@example.com" required>
                 </div>
                 <div class="form-group">
                     <label for="cust-phone">Phone Number *</label>
-                    <input type="tel" id="cust-phone" placeholder="+1 234 567 8900" required oninput="validateForm()">
-                    <span class="error-msg" id="err-phone">Please enter your phone number</span>
+                    <input type="tel" id="cust-phone" placeholder="+1 234 567 8900" required>
                 </div>
                 <div class="form-group">
                     <label for="cust-address">Delivery Address *</label>
-                    <input type="text" id="cust-address" placeholder="123 Main St, City, Country" required oninput="validateForm()">
-                    <span class="error-msg" id="err-address">Please enter your shipping address</span>
+                    <input type="text" id="cust-address" placeholder="123 Main St, City, Country" required>
                 </div>
             </form>
 
@@ -384,11 +403,10 @@
             merchantEmail: "atheef0913@gmail.com"
         };
 
-        let paypalButtonsInstance = null;
-
-        function handleImageError(imgEl) {
-            imgEl.onerror = null;
-            imgEl.src = "https://via.placeholder.com/600x600/161b22/ffb703?text=Front.png+Not+Found";
+        function switchImage(thumbElement, imageSrc) {
+            document.getElementById('main-product-img').src = imageSrc;
+            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+            thumbElement.classList.add('active');
         }
 
         function initiateCheckout() {
@@ -461,15 +479,10 @@
                         alert(`Thank you for your order, ${details.payer.name.given_name}! Money has been routed to ${itemConfig.merchantEmail}.`);
                         closeCheckout();
                     });
-                },
-                onError: function(err) {
-                    console.error('PayPal Checkout Error:', err);
-                    alert('There was an error processing your PayPal transaction. Please check your details and try again.');
                 }
             }).render('#paypal-button-container');
         }
 
-        // Close modal on background click
         window.onclick = function(event) {
             const modal = document.getElementById('checkout-modal');
             if (event.target === modal) {
