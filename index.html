@@ -39,7 +39,7 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-glass);
-            padding: 18px 5%;
+            padding: 14px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -49,16 +49,16 @@
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 900;
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
         }
 
         .tagline {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
             font-weight: 500;
         }
@@ -67,49 +67,41 @@
             flex: 1;
             max-width: 1200px;
             width: 100%;
-            margin: 40px auto;
-            padding: 0 20px;
+            margin: 20px auto;
+            padding: 0 16px;
         }
 
         .section-title {
-            font-size: 1.5rem;
-            margin-bottom: 24px;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
             font-weight: 700;
-            letter-spacing: -0.5px;
         }
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 32px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
         }
 
         .product-card {
             background: var(--bg-card);
             border: 1px solid var(--border-glass);
             border-radius: 16px;
-            padding: 20px;
+            padding: 16px;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
         }
 
-        .product-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--border-hover);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-        }
-
         .image-container {
             width: 100%;
-            height: 320px;
+            height: 280px;
             border-radius: 12px;
             overflow: hidden;
             background: #161b22;
             position: relative;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -119,18 +111,20 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: opacity 0.3s ease;
         }
 
         .thumbnails {
             display: flex;
             gap: 8px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 4px;
         }
 
         .thumb {
-            width: 56px;
-            height: 56px;
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
             border-radius: 8px;
             object-fit: cover;
             cursor: pointer;
@@ -152,65 +146,53 @@
         }
 
         .product-title {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--text-primary);
+            margin-bottom: 6px;
         }
 
         .product-price {
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             color: var(--accent-gold);
             font-weight: 800;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
 
         .selector-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 16px;
         }
 
         select {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             background: #0d1117;
             color: var(--text-primary);
             border: 1px solid var(--border-glass);
             border-radius: 8px;
             outline: none;
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: border-color 0.2s;
-        }
-
-        select:focus {
-            border-color: var(--accent-gold);
+            font-size: 0.85rem;
         }
 
         .btn-buy {
             width: 100%;
-            padding: 15px;
+            padding: 14px;
             background: var(--accent-gradient);
             color: #000;
             font-weight: 800;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            transition: opacity 0.2s ease, transform 0.1s ease;
+            letter-spacing: 0.5px;
             margin-top: auto;
         }
 
-        .btn-buy:hover {
-            opacity: 0.95;
-            transform: scale(1.01);
-        }
-
-        /* Modal styling */
+        /* Mobile Responsive Modal Drawer */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -222,90 +204,95 @@
             -webkit-backdrop-filter: blur(10px);
             display: none;
             justify-content: center;
-            align-items: center;
+            align-items: flex-end; /* Slides up naturally on mobile */
             z-index: 1000;
-            padding: 20px;
+            padding: 0;
         }
 
         .modal-content {
             background: #161b22;
-            border: 1px solid var(--border-glass);
-            border-radius: 20px;
-            padding: 32px;
+            border-top: 1px solid var(--border-glass);
+            border-radius: 20px 20px 0 0;
+            padding: 24px 20px;
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
+            max-height: 90vh; /* Prevents overflow off screen */
+            overflow-y: auto; /* Enables vertical scrolling */
             position: relative;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        @media (min-width: 600px) {
+            .modal-overlay {
+                align-items: center;
+                padding: 20px;
+            }
+            .modal-content {
+                border: 1px solid var(--border-glass);
+                border-radius: 20px;
+                max-height: 85vh;
+            }
         }
 
         .close-btn {
             position: absolute;
-            top: 18px;
-            right: 22px;
+            top: 16px;
+            right: 20px;
             color: var(--text-secondary);
             font-size: 1.6rem;
             cursor: pointer;
             line-height: 1;
-            transition: color 0.2s;
-        }
-
-        .close-btn:hover {
-            color: var(--text-primary);
         }
 
         .modal-header {
-            margin-bottom: 24px;
+            margin-bottom: 18px;
+            padding-right: 30px;
         }
 
         .modal-header h3 {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 700;
         }
 
         .modal-header p {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
-            margin-bottom: 6px;
-            font-weight: 500;
+            margin-bottom: 4px;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px;
+            padding: 10px 12px;
             background: #0d1117;
             border: 1px solid var(--border-glass);
             border-radius: 8px;
             color: var(--text-primary);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus {
-            border-color: var(--accent-gold);
         }
 
         #paypal-button-container {
-            margin-top: 24px;
+            margin-top: 18px;
             min-height: 150px;
+            width: 100%;
         }
 
         footer {
             border-top: 1px solid var(--border-glass);
-            padding: 24px;
+            padding: 18px;
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
         }
     </style>
@@ -360,13 +347,13 @@
         </div>
     </main>
 
-    <!-- Modal Drawer -->
+    <!-- Mobile-Optimized Modal -->
     <div class="modal-overlay" id="checkout-modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeCheckout()">&times;</span>
             <div class="modal-header">
                 <h3 id="modal-title">Shipping Details</h3>
-                <p id="modal-subtitle">Enter address to render secure PayPal payment options</p>
+                <p id="modal-subtitle">Fill shipping info to reveal PayPal buttons</p>
             </div>
             
             <form id="shipping-form" onsubmit="return false;">
@@ -393,7 +380,7 @@
     </div>
 
     <footer>
-        &copy; WeShop. All rights reserved. Express Checkout via PayPal.
+        &copy; WeShop. Express Checkout via PayPal.
     </footer>
 
     <script>
@@ -438,7 +425,7 @@
             container.innerHTML = '';
 
             if (typeof paypal === 'undefined') {
-                container.innerHTML = '<p style="color:var(--error-red); text-align:center;">PayPal SDK failed to load. Please check connection.</p>';
+                container.innerHTML = '<p style="color:var(--error-red); text-align:center;">PayPal SDK failed to load.</p>';
                 return;
             }
 
@@ -451,7 +438,7 @@
                 },
                 onClick: function(data, actions) {
                     if (!validateForm()) {
-                        alert('Please complete all required contact and shipping details first.');
+                        alert('Please fill out all contact and shipping details above first.');
                         return actions.reject();
                     }
                     return actions.resolve();
@@ -476,7 +463,7 @@
                 },
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
-                        alert(`Thank you for your order, ${details.payer.name.given_name}! Money has been routed to ${itemConfig.merchantEmail}.`);
+                        alert(`Thank you for your order, ${details.payer.name.given_name}! Payments received at ${itemConfig.merchantEmail}.`);
                         closeCheckout();
                     });
                 }
