@@ -3,37 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeShop - Print-on-Demand Store</title>
+    <title>WeShop | Premium Print-on-Demand</title>
+    <!-- PayPal SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=BAAQnnBqqFcv6UFedRqZxhuc2vSTteXDmx_8OBX0YcOj9OjhX0NIPu-ibCZ8Brk7mD7gFsOwMKRo7bddzo&currency=USD"></script>
     <style>
         :root {
-            --bg-glass: rgba(20, 20, 30, 0.65);
-            --border-glass: rgba(255, 255, 255, 0.12);
+            --bg-main: #0a0c10;
+            --bg-card: rgba(22, 27, 34, 0.75);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --border-hover: #ffb703;
             --accent-gold: #ffb703;
             --accent-gradient: linear-gradient(135deg, #ffb703, #fb8500);
-            --text-main: #f8f9fa;
-            --text-sub: #a0aab8;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --error-red: #ff7b72;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background: #0d0f12;
-            color: var(--text-main);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
             min-height: 100vh;
-            padding-bottom: 60px;
+            display: flex;
+            flex-direction: column;
         }
 
         header {
-            background: rgba(13, 15, 18, 0.85);
+            background: rgba(13, 17, 23, 0.85);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-glass);
-            padding: 20px 40px;
+            padding: 18px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -44,40 +50,56 @@
 
         .logo {
             font-size: 1.8rem;
-            font-weight: 800;
+            font-weight: 900;
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
 
-        .container {
+        .tagline {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        main {
+            flex: 1;
             max-width: 1200px;
+            width: 100%;
             margin: 40px auto;
             padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
+            gap: 32px;
         }
 
         .product-card {
-            background: var(--bg-glass);
+            background: var(--bg-card);
             border: 1px solid var(--border-glass);
             border-radius: 16px;
             padding: 20px;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-gold);
+            transform: translateY(-6px);
+            border-color: var(--border-hover);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
         }
 
         .image-container {
@@ -85,122 +107,190 @@
             height: 340px;
             border-radius: 12px;
             overflow: hidden;
-            background: #15181e;
+            background: #161b22;
             position: relative;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .main-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
         .product-title {
             font-size: 1.25rem;
             font-weight: 700;
             margin-bottom: 8px;
+            color: var(--text-primary);
         }
 
         .product-price {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             color: var(--accent-gold);
             font-weight: 800;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
-        .selectors {
-            display: flex;
+        .selector-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
             margin-bottom: 20px;
         }
 
         select {
-            flex: 1;
-            padding: 10px;
-            background: #1c2029;
-            color: #fff;
+            width: 100%;
+            padding: 12px;
+            background: #0d1117;
+            color: var(--text-primary);
             border: 1px solid var(--border-glass);
             border-radius: 8px;
             outline: none;
             cursor: pointer;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            border-color: var(--accent-gold);
         }
 
         .btn-buy {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             background: var(--accent-gradient);
             color: #000;
-            font-weight: 700;
+            font-weight: 800;
+            font-size: 0.95rem;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: opacity 0.2s ease;
+            letter-spacing: 0.8px;
+            transition: opacity 0.2s ease, transform 0.1s ease;
             margin-top: auto;
         }
 
         .btn-buy:hover {
-            opacity: 0.9;
+            opacity: 0.95;
+            transform: scale(1.01);
         }
 
+        /* Modal styling */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            padding: 20px;
         }
 
         .modal-content {
-            background: #14171d;
+            background: #161b22;
             border: 1px solid var(--border-glass);
-            border-radius: 16px;
-            padding: 30px;
+            border-radius: 20px;
+            padding: 32px;
             width: 100%;
             max-width: 480px;
             position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
         }
 
         .close-btn {
             position: absolute;
-            top: 15px;
-            right: 20px;
-            color: var(--text-sub);
-            font-size: 1.5rem;
+            top: 18px;
+            right: 22px;
+            color: var(--text-secondary);
+            font-size: 1.6rem;
             cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-header {
+            margin-bottom: 24px;
+        }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .modal-header p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
         }
 
         .form-group {
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
 
         .form-group label {
             display: block;
             font-size: 0.85rem;
-            color: var(--text-sub);
+            color: var(--text-secondary);
             margin-bottom: 6px;
+            font-weight: 500;
         }
 
         .form-group input {
             width: 100%;
-            padding: 10px;
-            background: #1c2029;
+            padding: 12px;
+            background: #0d1117;
             border: 1px solid var(--border-glass);
             border-radius: 8px;
-            color: #fff;
+            color: var(--text-primary);
+            font-size: 0.95rem;
             outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-gold);
+        }
+
+        .error-msg {
+            color: var(--error-red);
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: none;
         }
 
         #paypal-button-container {
-            margin-top: 20px;
+            margin-top: 24px;
+            min-height: 150px;
+        }
+
+        footer {
+            border-top: 1px solid var(--border-glass);
+            padding: 24px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
         }
     </style>
 </head>
@@ -208,109 +298,184 @@
 
     <header>
         <div class="logo">WeShop</div>
+        <div class="tagline">Exclusive Apparel</div>
     </header>
 
-    <div class="container">
-        <div class="product-grid" id="grid">
+    <main>
+        <h2 class="section-title">Featured Drop</h2>
+        
+        <div class="product-grid">
             <div class="product-card">
                 <div class="image-container">
-                    <img class="main-image" src="Front.png" alt="Black Friday T-Shirt Front">
+                    <img id="product-img" class="main-image" src="Front.png" alt="Black Friday Classic Tee" onerror="handleImageError(this)">
                 </div>
                 
-                <h3 class="product-title">Black Friday Classic Tee</h3>
-                <div class="product-price">$45.00</div>
-                
-                <div class="selectors">
-                    <select id="size">
-                        <option value="S">Size: S</option>
-                        <option value="M">Size: M</option>
-                        <option value="L" selected>Size: L</option>
-                        <option value="XL">Size: XL</option>
-                        <option value="2XL">Size: 2XL</option>
-                    </select>
-                    <select id="color">
-                        <option value="Black">Color: Black</option>
-                    </select>
-                </div>
+                <div class="product-info">
+                    <h3 class="product-title" id="item-title">Black Friday Classic Tee</h3>
+                    <div class="product-price" id="item-price">$45.00</div>
+                    
+                    <div class="selector-group">
+                        <div>
+                            <select id="selected-size">
+                                <option value="S">Size: S</option>
+                                <option value="M">Size: M</option>
+                                <option value="L" selected>Size: L</option>
+                                <option value="XL">Size: XL</option>
+                                <option value="2XL">Size: 2XL</option>
+                            </select>
+                        </div>
+                        <div>
+                            <select id="selected-color">
+                                <option value="Black">Color: Black</option>
+                            </select>
+                        </div>
+                    </div>
 
-                <button class="btn-buy" onclick="openCheckout('Black Friday Classic Tee', 45.00)">Buy Now</button>
+                    <button class="btn-buy" onclick="initiateCheckout()">Buy Now</button>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <!-- Checkout Modal -->
+    <!-- Modal Drawer -->
     <div class="modal-overlay" id="checkout-modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeCheckout()">&times;</span>
-            <h3 style="margin-bottom: 20px;" id="modal-product-title">Complete Checkout</h3>
+            <div class="modal-header">
+                <h3 id="modal-title">Shipping Details</h3>
+                <p id="modal-subtitle">Enter address to render secure PayPal payment options</p>
+            </div>
             
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="cust-name" placeholder="John Doe" required>
-            </div>
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="cust-email" placeholder="john@example.com" required>
-            </div>
-            <div class="form-group">
-                <label>Phone Number</label>
-                <input type="tel" id="cust-phone" placeholder="+1 234 567 8900" required>
-            </div>
-            <div class="form-group">
-                <label>Delivery Address</label>
-                <input type="text" id="cust-address" placeholder="123 Main St, City, Country" required>
-            </div>
+            <form id="shipping-form" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="cust-name">Full Name *</label>
+                    <input type="text" id="cust-name" placeholder="John Doe" required oninput="validateForm()">
+                    <span class="error-msg" id="err-name">Please enter your full name</span>
+                </div>
+                <div class="form-group">
+                    <label for="cust-email">Email Address *</label>
+                    <input type="email" id="cust-email" placeholder="john@example.com" required oninput="validateForm()">
+                    <span class="error-msg" id="err-email">Please enter a valid email</span>
+                </div>
+                <div class="form-group">
+                    <label for="cust-phone">Phone Number *</label>
+                    <input type="tel" id="cust-phone" placeholder="+1 234 567 8900" required oninput="validateForm()">
+                    <span class="error-msg" id="err-phone">Please enter your phone number</span>
+                </div>
+                <div class="form-group">
+                    <label for="cust-address">Delivery Address *</label>
+                    <input type="text" id="cust-address" placeholder="123 Main St, City, Country" required oninput="validateForm()">
+                    <span class="error-msg" id="err-address">Please enter your shipping address</span>
+                </div>
+            </form>
 
             <div id="paypal-button-container"></div>
         </div>
     </div>
 
-    <script>
-        let currentItem = { name: '', price: 0 };
+    <footer>
+        &copy; WeShop. All rights reserved. Express Checkout via PayPal.
+    </footer>
 
-        function openCheckout(name, price) {
-            currentItem = { name, price };
-            document.getElementById('modal-product-title').innerText = `Buy ${name} ($${price.toFixed(2)})`;
+    <script>
+        const itemConfig = {
+            name: "Black Friday Classic Tee",
+            price: 45.00,
+            merchantEmail: "atheef0913@gmail.com"
+        };
+
+        let paypalButtonsInstance = null;
+
+        function handleImageError(imgEl) {
+            imgEl.onerror = null;
+            imgEl.src = "https://via.placeholder.com/600x600/161b22/ffb703?text=Front.png+Not+Found";
+        }
+
+        function initiateCheckout() {
+            const size = document.getElementById('selected-size').value;
+            const color = document.getElementById('selected-color').value;
+            
+            document.getElementById('modal-title').innerText = `Checkout (${size} / ${color})`;
+            document.getElementById('modal-subtitle').innerText = `${itemConfig.name} - $${itemConfig.price.toFixed(2)}`;
             document.getElementById('checkout-modal').style.display = 'flex';
             
-            document.getElementById('paypal-button-container').innerHTML = '';
-
-            if (typeof paypal !== 'undefined') {
-                paypal.Buttons({
-                    createOrder: function(data, actions) {
-                        const nameVal = document.getElementById('cust-name').value;
-                        const addressVal = document.getElementById('cust-address').value;
-                        
-                        if (!nameVal || !addressVal) {
-                            alert('Please fill out all delivery fields before proceeding.');
-                            return actions.reject();
-                        }
-
-                        return actions.order.create({
-                            purchase_units: [{
-                                amount: {
-                                    value: currentItem.price.toString()
-                                },
-                                payee: {
-                                    email_address: "atheef0913@gmail.com"
-                                },
-                                description: `${currentItem.name} - WeShop Store`
-                            }]
-                        });
-                    },
-                    onApprove: function(data, actions) {
-                        return actions.order.capture().then(function(details) {
-                            alert('Transaction completed by ' + details.payer.name.given_name + '! Funds sent to atheef0913@gmail.com.');
-                            closeCheckout();
-                        });
-                    }
-                }).render('#paypal-button-container');
-            }
+            renderPayPalButtons();
         }
 
         function closeCheckout() {
             document.getElementById('checkout-modal').style.display = 'none';
         }
+
+        function validateForm() {
+            const name = document.getElementById('cust-name').value.trim();
+            const email = document.getElementById('cust-email').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const address = document.getElementById('cust-address').value.trim();
+            
+            return name !== '' && email !== '' && phone !== '' && address !== '';
+        }
+
+        function renderPayPalButtons() {
+            const container = document.getElementById('paypal-button-container');
+            container.innerHTML = '';
+
+            if (typeof paypal === 'undefined') {
+                container.innerHTML = '<p style="color:var(--error-red); text-align:center;">PayPal SDK failed to load. Please check connection.</p>';
+                return;
+            }
+
+            paypal.Buttons({
+                style: {
+                    layout: 'vertical',
+                    color:  'gold',
+                    shape:  'rect',
+                    label:  'paypal'
+                },
+                onClick: function(data, actions) {
+                    if (!validateForm()) {
+                        alert('Please complete all required contact and shipping details first.');
+                        return actions.reject();
+                    }
+                    return actions.resolve();
+                },
+                createOrder: function(data, actions) {
+                    const size = document.getElementById('selected-size').value;
+                    const color = document.getElementById('selected-color').value;
+                    const custName = document.getElementById('cust-name').value.trim();
+
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: itemConfig.price.toFixed(2),
+                                currency_code: "USD"
+                            },
+                            payee: {
+                                email_address: itemConfig.merchantEmail
+                            },
+                            description: `${itemConfig.name} (${size}/${color}) - Customer: ${custName}`
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        alert(`Thank you for your order, ${details.payer.name.given_name}! Money has been routed to ${itemConfig.merchantEmail}.`);
+                        closeCheckout();
+                    });
+                },
+                onError: function(err) {
+                    console.error('PayPal Checkout Error:', err);
+                    alert('There was an error processing your PayPal transaction. Please check your details and try again.');
+                }
+            }).render('#paypal-button-container');
+        }
+
+        // Close modal on background click
+        window.onclick = function(event) {
+            const modal = document.getElementById('checkout-modal');
+            if (event.target === modal) {
+                closeCheckout();
+            }
+        };
     </script>
 </body>
 </html>
