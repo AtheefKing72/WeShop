@@ -82,7 +82,7 @@
 
         .image-container {
             width: 100%;
-            height: 320px;
+            height: 340px;
             border-radius: 12px;
             overflow: hidden;
             background: #15181e;
@@ -94,29 +94,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: opacity 0.3s ease;
-        }
-
-        .thumbnails {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .thumb {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
-            object-fit: cover;
-            cursor: pointer;
-            border: 2px solid transparent;
-            opacity: 0.7;
-            transition: all 0.2s ease;
-        }
-
-        .thumb.active, .thumb:hover {
-            border-color: var(--accent-gold);
-            opacity: 1;
         }
 
         .product-title {
@@ -168,7 +145,6 @@
             opacity: 0.9;
         }
 
-        /* Modal / Checkout Drawer */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -236,17 +212,11 @@
 
     <div class="container">
         <div class="product-grid" id="grid">
-            <!-- Product Card -->
             <div class="product-card">
-                <div class="image-contner"
-                    <img id="main-img" class="main-image" src="Front.png" alt="Black Friday T-Shirt Front">
+                <div class="image-container">
+                    <img class="main-image" src="Front.png" alt="Black Friday T-Shirt Front">
                 </div>
-                <div class="thumbnails">
-                    <img class="thumb active" src="Front.png" onclick="switchImg(this, 'Front.png')" alt="Front">
-                    <img class="thumb" src="Back.png" onclick="switchImg(this, 'Back.png')" alt="Back">
-                    <img class="thumb" src="Person 1 Front.png" onclick="switchImg(this, 'Person 1 Front.png')" alt="Model">
-                    <img class="thumb" src="Folded.png" onclick="switchImg(this, 'Folded.png')" alt="Folded">
-                </div>
+                
                 <h3 class="product-title">Black Friday Classic Tee</h3>
                 <div class="product-price">$45.00</div>
                 
@@ -276,7 +246,7 @@
             
             <div class="form-group">
                 <label>Full Name</label>
-                <input type="text" id="cust-name" placeholder="john Doe" required>
+                <input type="text" id="cust-name" placeholder="John Doe" required>
             </div>
             <div class="form-group">
                 <label>Email Address</label>
@@ -298,18 +268,11 @@
     <script>
         let currentItem = { name: '', price: 0 };
 
-        function switchImg(thumbEl, src) {
-            document.getElementById('main-img').src = src;
-            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-            thumbEl.classList.add('active');
-        }
-
         function openCheckout(name, price) {
             currentItem = { name, price };
             document.getElementById('modal-product-title').innerText = `Buy ${name} ($${price.toFixed(2)})`;
             document.getElementById('checkout-modal').style.display = 'flex';
             
-            // Clear existing buttons if any
             document.getElementById('paypal-button-container').innerHTML = '';
 
             if (typeof paypal !== 'undefined') {
