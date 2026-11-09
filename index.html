@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WeShop | Premium Print-on-Demand</title>
-    <!-- PayPal SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=BAAQnnBqqFcv6UFedRqZxhuc2vSTteXDmx_8OBX0YcOj9OjhX0NIPu-ibCZ8Brk7mD7gFsOwMKRo7bddzo&currency=USD"></script>
+    <!-- PayPal SDK with button components -->
+    <script src="https://www.paypal.com/sdk/js?client-id=BAAQnnBqqFcv6UFedRqZxhuc2vSTteXDmx_8OBX0YcOj9OjhX0NIPu-ibCZ8Brk7mD7gFsOwMKRo7bddzo&currency=USD&components=buttons"></script>
     <style>
         :root {
             --bg-main: #0a0c10;
@@ -204,7 +204,7 @@
             -webkit-backdrop-filter: blur(10px);
             display: none;
             justify-content: center;
-            align-items: flex-end; /* Slides up naturally on mobile */
+            align-items: flex-end;
             z-index: 1000;
             padding: 0;
         }
@@ -216,8 +216,8 @@
             padding: 24px 20px;
             width: 100%;
             max-width: 500px;
-            max-height: 90vh; /* Prevents overflow off screen */
-            overflow-y: auto; /* Enables vertical scrolling */
+            max-height: 90vh;
+            overflow-y: auto;
             position: relative;
             box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7);
         }
@@ -353,7 +353,7 @@
             <span class="close-btn" onclick="closeCheckout()">&times;</span>
             <div class="modal-header">
                 <h3 id="modal-title">Shipping Details</h3>
-                <p id="modal-subtitle">Fill shipping info to reveal PayPal buttons</p>
+                <p id="modal-subtitle">Fill shipping info to reveal payment options</p>
             </div>
             
             <form id="shipping-form" onsubmit="return false;">
@@ -370,8 +370,20 @@
                     <input type="tel" id="cust-phone" placeholder="+1 234 567 8900" required>
                 </div>
                 <div class="form-group">
-                    <label for="cust-address">Delivery Address *</label>
-                    <input type="text" id="cust-address" placeholder="123 Main St, City, Country" required>
+                    <label for="cust-address">Street Address *</label>
+                    <input type="text" id="cust-address" placeholder="123 Main St" required>
+                </div>
+                <div class="form-group">
+                    <label for="cust-city">City *</label>
+                    <input type="text" id="cust-city" placeholder="City" required>
+                </div>
+                <div class="form-group">
+                    <label for="cust-state">State / Province (Optional)</label>
+                    <input type="text" id="cust-state" placeholder="State / Province">
+                </div>
+                <div class="form-group">
+                    <label for="cust-country">Country *</label>
+                    <input type="text" id="cust-country" placeholder="Enter your country" required>
                 </div>
             </form>
 
@@ -380,7 +392,7 @@
     </div>
 
     <footer>
-        &copy; WeShop. Express Checkout via PayPal.
+        &copy; WeShop. Express Secure Checkout.
     </footer>
 
     <script>
@@ -416,8 +428,10 @@
             const email = document.getElementById('cust-email').value.trim();
             const phone = document.getElementById('cust-phone').value.trim();
             const address = document.getElementById('cust-address').value.trim();
+            const city = document.getElementById('cust-city').value.trim();
+            const country = document.getElementById('cust-country').value.trim();
             
-            return name !== '' && email !== '' && phone !== '' && address !== '';
+            return name !== '' && email !== '' && phone !== '' && address !== '' && city !== '' && country !== '';
         }
 
         function renderPayPalButtons() {
@@ -438,7 +452,7 @@
                 },
                 onClick: function(data, actions) {
                     if (!validateForm()) {
-                        alert('Please fill out all contact and shipping details above first.');
+                        alert('Please fill out all required shipping and contact fields above first.');
                         return actions.reject();
                     }
                     return actions.resolve();
@@ -447,6 +461,10 @@
                     const size = document.getElementById('selected-size').value;
                     const color = document.getElementById('selected-color').value;
                     const custName = document.getElementById('cust-name').value.trim();
+                    const custAddress = document.getElementById('cust-address').value.trim();
+                    const custCity = document.getElementById('cust-city').value.trim();
+                    const custState = document.getElementById('cust-state').value.trim();
+                    const custCountry = document.getElementById('cust-country').value.trim();
 
                     return actions.order.create({
                         purchase_units: [{
@@ -457,8 +475,11 @@
                             payee: {
                                 email_address: itemConfig.merchantEmail
                             },
-                            description: `${itemConfig.name} (${size}/${color}) - Customer: ${custName}`
-                        }]
+                            description: `${itemConfig.name} (${size}/${color}) - Ship to: ${custName}, ${custAddress}, ${custCity}, ${custState ? custState + ', ' : ''}${custCountry}`
+                        }],
+                        application_context: {
+                            shipping_preference: "NO_SHIPPING"
+                        }
                     });
                 },
                 onApprove: function(data, actions) {
