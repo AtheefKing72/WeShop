@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WeShop | Premium Print-on-Demand</title>
-    <!-- PayPal SDK with button components -->
+    <!-- PayPal SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=BAAQnnBqqFcv6UFedRqZxhuc2vSTteXDmx_8OBX0YcOj9OjhX0NIPu-ibCZ8Brk7mD7gFsOwMKRo7bddzo&currency=USD&components=buttons"></script>
     <style>
         :root {
@@ -92,6 +92,17 @@
             -webkit-backdrop-filter: blur(16px);
             display: flex;
             flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+        }
+
+        .product-card.coming-soon {
+            opacity: 0.75;
+            border-style: dashed;
         }
 
         .image-container {
@@ -111,6 +122,24 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .placeholder-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .placeholder-icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            opacity: 0.5;
         }
 
         .thumbnails {
@@ -190,6 +219,12 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-top: auto;
+        }
+
+        .btn-disabled {
+            background: #21262d;
+            color: var(--text-secondary);
+            cursor: not-allowed;
         }
 
         /* Mobile Responsive Modal Drawer */
@@ -282,9 +317,38 @@
             outline: none;
         }
 
+        .payment-options-divider {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin: 16px 0 10px 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-stripe-link {
+            width: 100%;
+            padding: 12px;
+            background: #635bfc;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 10px;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn-stripe-link:hover {
+            opacity: 0.9;
+        }
+
         #paypal-button-container {
-            margin-top: 18px;
-            min-height: 150px;
+            margin-top: 10px;
+            min-height: 120px;
             width: 100%;
         }
 
@@ -305,9 +369,10 @@
     </header>
 
     <main>
-        <h2 class="section-title">Featured Drop</h2>
+        <h2 class="section-title">Featured Drops</h2>
         
         <div class="product-grid">
+            <!-- Active Product 1 -->
             <div class="product-card">
                 <div class="image-container">
                     <img id="main-product-img" class="main-image" src="Front.png" alt="Black Friday Classic Tee">
@@ -344,6 +409,37 @@
                     <button class="btn-buy" onclick="initiateCheckout()">Buy Now</button>
                 </div>
             </div>
+
+            <!-- Coming Soon Placeholder Product 2 -->
+            <div class="product-card coming-soon">
+                <div class="image-container">
+                    <div class="placeholder-box">
+                        <div class="placeholder-icon">🔥</div>
+                        <p style="font-weight: 600; font-size: 0.9rem;">Black Friday Drop</p>
+                        <p style="font-size: 0.75rem; opacity: 0.7; margin-top: 4px;">Updating Soon...</p>
+                    </div>
+                </div>
+                
+                <div class="product-info">
+                    <h3 class="product-title" style="color: var(--text-secondary);">Black Friday Special Edition</h3>
+                    <div class="product-price" style="color: var(--text-secondary);">$ --.--</div>
+                    
+                    <div class="selector-group">
+                        <div>
+                            <select disabled>
+                                <option>Size: --</option>
+                            </select>
+                        </div>
+                        <div>
+                            <select disabled>
+                                <option>Color: --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn-buy btn-disabled" disabled>Updating Soon</button>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -353,7 +449,7 @@
             <span class="close-btn" onclick="closeCheckout()">&times;</span>
             <div class="modal-header">
                 <h3 id="modal-title">Shipping Details</h3>
-                <p id="modal-subtitle">Fill shipping info to reveal payment options</p>
+                <p id="modal-subtitle">Fill shipping info to proceed to payment</p>
             </div>
             
             <form id="shipping-form" onsubmit="return false;">
@@ -387,7 +483,13 @@
                 </div>
             </form>
 
+            <div class="payment-options-divider">Choose Payment Method</div>
+
+            <!-- Option 1: PayPal SDK Buttons (handles PayPal + Direct Cards) -->
             <div id="paypal-button-container"></div>
+
+            <!-- Option 2: Direct Stripe Payment Link -->
+            <button type="button" class="btn-stripe-link" onclick="payWithStripe()">Pay via Credit/Debit Card (Stripe)</button>
         </div>
     </div>
 
@@ -399,7 +501,8 @@
         const itemConfig = {
             name: "Black Friday Classic Tee",
             price: 45.00,
-            merchantEmail: "atheef0913@gmail.com"
+            merchantEmail: "atheef0913@gmail.com",
+            stripeUrl: "https://buy.stripe.com/YOUR_STRIPE_PAYMENT_LINK" // Replace with your actual Stripe Payment Link when ready
         };
 
         function switchImage(thumbElement, imageSrc) {
@@ -432,6 +535,15 @@
             const country = document.getElementById('cust-country').value.trim();
             
             return name !== '' && email !== '' && phone !== '' && address !== '' && city !== '' && country !== '';
+        }
+
+        function payWithStripe() {
+            if (!validateForm()) {
+                alert('Please fill out all required shipping and contact fields above first.');
+                return;
+            }
+            // Redirects to Stripe Checkout
+            window.location.href = itemConfig.stripeUrl;
         }
 
         function renderPayPalButtons() {
@@ -484,7 +596,7 @@
                 },
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
-                        alert(`Thank you for your order, ${details.payer.name.given_name}! Payments received at ${itemConfig.merchantEmail}.`);
+                        alert(`Order Confirmed! Thank you for your purchase, ${details.payer.name.given_name}. Your payment and delivery details have been received.`);
                         closeCheckout();
                     });
                 }
