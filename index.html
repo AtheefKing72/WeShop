@@ -410,7 +410,7 @@
                 </div>
             </div>
 
-            <!-- Coming Soon Placeholder Product 2 -->
+            <!-- Placeholder Product 2 -->
             <div class="product-card coming-soon">
                 <div class="image-container">
                     <div class="placeholder-box">
@@ -443,7 +443,7 @@
         </div>
     </main>
 
-    <!-- Mobile-Optimized Modal -->
+    <!-- Modal Drawer -->
     <div class="modal-overlay" id="checkout-modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeCheckout()">&times;</span>
@@ -485,10 +485,10 @@
 
             <div class="payment-options-divider">Choose Payment Method</div>
 
-            <!-- Option 1: PayPal SDK Buttons (handles PayPal + Direct Cards) -->
+            <!-- PayPal Option -->
             <div id="paypal-button-container"></div>
 
-            <!-- Option 2: Direct Stripe Payment Link -->
+            <!-- Stripe Option -->
             <button type="button" class="btn-stripe-link" onclick="payWithStripe()">Pay via Credit/Debit Card (Stripe)</button>
         </div>
     </div>
@@ -502,7 +502,7 @@
             name: "Black Friday Classic Tee",
             price: 45.00,
             merchantEmail: "atheef0913@gmail.com",
-            stripeUrl: "https://buy.stripe.com/YOUR_STRIPE_PAYMENT_LINK" // Replace with your actual Stripe Payment Link when ready
+            stripeUrl: "https://buy.stripe.com/YOUR_STRIPE_PAYMENT_LINK"
         };
 
         function switchImage(thumbElement, imageSrc) {
@@ -542,7 +542,6 @@
                 alert('Please fill out all required shipping and contact fields above first.');
                 return;
             }
-            // Redirects to Stripe Checkout
             window.location.href = itemConfig.stripeUrl;
         }
 
