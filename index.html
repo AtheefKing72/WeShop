@@ -227,7 +227,7 @@
             cursor: not-allowed;
         }
 
-        /* Mobile Responsive Modal Drawer */
+        /* Modal Drawer */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -317,47 +317,39 @@
             outline: none;
         }
 
-        .payment-options-divider {
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin: 16px 0 10px 0;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-stripe-link {
-            width: 100%;
-            padding: 12px;
-            background: #635bfc;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 0.85rem;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            text-align: center;
-            margin-top: 10px;
-            transition: opacity 0.2s ease;
-        }
-
-        .btn-stripe-link:hover {
-            opacity: 0.9;
-        }
-
         #paypal-button-container {
-            margin-top: 10px;
-            min-height: 120px;
+            margin-top: 18px;
+            min-height: 140px;
             width: 100%;
         }
 
         footer {
             border-top: 1px solid var(--border-glass);
-            padding: 18px;
+            padding: 20px 18px;
             text-align: center;
             font-size: 0.8rem;
             color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-gold);
         }
     </style>
 </head>
@@ -483,26 +475,24 @@
                 </div>
             </form>
 
-            <div class="payment-options-divider">Choose Payment Method</div>
-
-            <!-- PayPal Option -->
             <div id="paypal-button-container"></div>
-
-            <!-- Stripe Option -->
-            <button type="button" class="btn-stripe-link" onclick="payWithStripe()">Pay via Credit/Debit Card (Stripe)</button>
         </div>
     </div>
 
     <footer>
-        &copy; WeShop. Express Secure Checkout.
+        <div class="footer-links">
+            <a href="about.html">About Us</a> • 
+            <a href="privacy.html">Privacy Policy</a> • 
+            <a href="payment.html">Payment & Shipping</a>
+        </div>
+        <div>&copy; WeShop. Express Secure Checkout.</div>
     </footer>
 
     <script>
         const itemConfig = {
             name: "Black Friday Classic Tee",
             price: 45.00,
-            merchantEmail: "atheef0913@gmail.com",
-            stripeUrl: "https://buy.stripe.com/YOUR_STRIPE_PAYMENT_LINK"
+            merchantEmail: "atheef0913@gmail.com"
         };
 
         function switchImage(thumbElement, imageSrc) {
@@ -535,14 +525,6 @@
             const country = document.getElementById('cust-country').value.trim();
             
             return name !== '' && email !== '' && phone !== '' && address !== '' && city !== '' && country !== '';
-        }
-
-        function payWithStripe() {
-            if (!validateForm()) {
-                alert('Please fill out all required shipping and contact fields above first.');
-                return;
-            }
-            window.location.href = itemConfig.stripeUrl;
         }
 
         function renderPayPalButtons() {
