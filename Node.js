@@ -132,7 +132,7 @@ app.post('/api/orders/capture', async (req, res) => {
 
 // Serve frontend for root routes
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Start Server
